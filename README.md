@@ -37,3 +37,7 @@ YouTube TV normally refuses to load in a frame. `tiletv.js` adds a `declarativeN
 
 - YouTube TV limits how many streams can play at once on your plan (usually 3). A fourth tile may show an error.
 - TileTV is not affiliated with or endorsed by YouTube or Google.
+
+## License
+
+[MIT](LICENSE)

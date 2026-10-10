@@ -6,6 +6,12 @@
   if (window === window.top || !ancestors || ancestors[0] !== EXT_ORIGIN) return;
 
   let muted = true;
+  let clean = false;
+
+  // Clean view only applies while watching. On the guide and other pages it would
+  // hide everything, leaving nothing to click.
+  const applyClean = () => document.documentElement.classList.toggle(
+    'mv-clean', clean && location.pathname.startsWith('/watch'));
 
   const style = document.createElement('style');
   // Clean view: hide every element, then un-hide just the <video>. A child can be
@@ -32,7 +38,6 @@
   function applyAudio() {
     for (const v of document.querySelectorAll('video')) {
       if (v.muted !== muted) v.muted = muted;
-      if (!muted && v.volume === 0) v.volume = 1;
     }
   }
   for (const type of ['play', 'playing', 'loadedmetadata', 'volumechange']) {
@@ -46,8 +51,14 @@
     if (e.origin !== EXT_ORIGIN || e.source !== window.parent) return;
     const d = e.data;
     if (!d || d.mv !== 1) return;
-    if ('muted' in d) { muted = !!d.muted; applyAudio(); }
-    if ('clean' in d) document.documentElement.classList.toggle('mv-clean', !!d.clean);
+    if ('muted' in d) {
+      const unmuting = muted && !d.muted;
+      muted = !!d.muted;
+      // Only on the switch to audible, so the user can still turn the volume down to 0.
+      if (unmuting) for (const v of document.querySelectorAll('video')) if (v.volume === 0) v.volume = 1;
+      applyAudio();
+    }
+    if ('clean' in d) { clean = !!d.clean; applyClean(); }
   });
 
   // Report the current URL (YouTube TV is a single-page app, so poll for changes).
@@ -55,6 +66,7 @@
   const reportUrl = () => {
     if (location.href !== lastUrl) {
       lastUrl = location.href;
+      applyClean();
       send({ url: lastUrl });
     }
   };
@@ -67,5 +79,12 @@
       e.preventDefault();
       send({ key: Number(e.code.slice(5)), shift: e.shiftKey });
     }
+  }, true);
+
+  // Double-clicking a tile switches the audio to it. Stop the event here so the
+  // YouTube TV player doesn't also treat it as a fullscreen toggle.
+  window.addEventListener('dblclick', (e) => {
+    e.stopImmediatePropagation();
+    send({ listen: true, shift: e.shiftKey });
   }, true);
 })();

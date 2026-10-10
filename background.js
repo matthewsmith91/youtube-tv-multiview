@@ -11,7 +11,12 @@ chrome.action.onClicked.addListener(async () => {
 });
 
 // The TileTV page adds a session rule (id = its tab id) that lets
-// tv.youtube.com load inside its frames. Drop the rule when that tab closes.
-chrome.tabs.onRemoved.addListener((tabId) => {
+// tv.youtube.com load inside its frames. Drop the rule when that tab closes or
+// goes to another page, so nothing else loaded in the tab can frame YouTube TV.
+const dropRule = (tabId) =>
   chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: [tabId] }).catch(() => {});
+
+chrome.tabs.onRemoved.addListener(dropRule);
+chrome.tabs.onUpdated.addListener((tabId, { url }) => {
+  if (url && url.split(/[?#]/)[0] !== chrome.runtime.getURL('tiletv.html')) dropRule(tabId);
 });

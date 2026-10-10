@@ -23,8 +23,9 @@ function save() {
 
 // ---------- framing permission ----------
 
-// tv.youtube.com sends X-Frame-Options / CSP frame-ancestors, which stops it
-// loading in a frame. Strip those headers, but only for frames in this tab.
+// tv.youtube.com sends X-Frame-Options, which stops it loading in a frame.
+// Strip that header, but only for frames in this tab. Its CSP has no
+// frame-ancestors, so the CSP stays in place and keeps protecting the tiles.
 async function allowFraming() {
   const tab = await chrome.tabs.getCurrent();
   await chrome.declarativeNetRequest.updateSessionRules({
@@ -36,7 +37,6 @@ async function allowFraming() {
         type: 'modifyHeaders',
         responseHeaders: [
           { header: 'x-frame-options', operation: 'remove' },
-          { header: 'content-security-policy', operation: 'remove' },
         ],
       },
       condition: {
@@ -51,10 +51,14 @@ async function allowFraming() {
 // ---------- tiles ----------
 
 function normalizeUrl(raw) {
-  const s = raw.trim();
+  let s = raw.trim();
   if (!s) return null;
+  // Also accept "/watch/...", "tv.youtube.com/watch/..." and http:// links.
+  if (s.startsWith('/')) s = YT_ORIGIN + s;
+  else if (!/^[a-z][a-z\d+.-]*:\/\//i.test(s)) s = `https://${s}`;
   try {
-    const u = new URL(s, YT_ORIGIN);
+    const u = new URL(s);
+    if (u.protocol === 'http:') u.protocol = 'https:';
     return u.origin === YT_ORIGIN ? u.href : null;
   } catch {
     return null;
@@ -186,6 +190,11 @@ window.addEventListener('message', (e) => {
     sendState(tile); // also covers a freshly loaded page
   }
   if (typeof e.data.key === 'number') handleAudioKey(e.data.key, e.data.shift);
+  if (e.data.listen) {
+    // Unlike the 🔊 button, double-clicking the only tile you hear keeps it on.
+    const onlyThis = state.hearing.length === 1 && state.hearing[0] === i;
+    if (e.data.shift || !onlyThis) setHearing(i, !!e.data.shift);
+  }
 });
 
 function handleAudioKey(n, shift) {
@@ -225,11 +234,12 @@ document.addEventListener('fullscreenchange', () => {
 
 window.addEventListener('keydown', (e) => {
   if (e.target.matches('input')) return;
+  const plain = !e.ctrlKey && !e.metaKey && !e.altKey;
   if (/^Digit[1-4]$/.test(e.code) && !e.ctrlKey && !e.metaKey) {
     handleAudioKey(Number(e.code.slice(5)), e.shiftKey);
-  } else if (e.key === 'f' || e.key === 'F') {
+  } else if (plain && (e.key === 'f' || e.key === 'F')) {
     toggleFullscreen();
-  } else if (e.key === 'm' || e.key === 'M') {
+  } else if (plain && (e.key === 'm' || e.key === 'M')) {
     state.hearing = [];
     renderAll();
     save();

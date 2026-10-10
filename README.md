@@ -15,9 +15,9 @@ After pulling changes, click the reload icon on TileTV in `chrome://extensions`,
 
 - **Layout:** 1, 2, 1+2, 2×2 or 1+3. Existing tiles keep playing when you change layout.
 - **Pick a channel:** each tile is a full YouTube TV page. Browse the guide inside it, or paste a `tv.youtube.com/watch/...` link into the tile's bar and press Enter.
-- **Audio:** 🔇/🔊 on a tile plays only that tile. Shift+click adds or removes it from the mix. The tiles you can hear have a green border.
+- **Audio:** 🔇/🔊 on a tile, or double-clicking inside the tile, plays only that tile. Shift+click or Shift+double-click adds or removes it from the mix. The tiles you can hear have a green border.
 - **Keys:** `1`–`4` (or `Alt+1`–`4` while a tile has focus) to switch audio, add Shift to mix, `M` to mute all, `F` for fullscreen.
-- **Clean view:** hides everything in each tile except the video, including YouTube TV's controls and captions. Turn it off to change channels.
+- **Clean view:** hides everything in each tile except the video, including YouTube TV's controls and captions. It switches itself off on the guide and other non-video pages, so you can pick a channel and it comes back once the stream starts.
 - **⤢ or double-click a tile's bar:** enlarge that tile. The others keep playing behind it.
 
 Your layout, channels and audio choices are saved.
@@ -31,7 +31,7 @@ Your layout, channels and audio choices are saved.
 | `tiletv.html` / `.css` / `.js` | The grid page: layouts, tile bars, audio selection, saved state. |
 | `content.js` | Runs in each tile. Mutes or unmutes the `<video>`, applies clean view, reports the tile's URL. |
 
-YouTube TV normally refuses to load in a frame. `tiletv.js` adds a `declarativeNetRequest` session rule, limited to the TileTV tab, that removes the `X-Frame-Options` and `Content-Security-Policy` headers from tv.youtube.com frames in that tab only. The page and the tiles talk with `postMessage`, and each side checks the other's origin.
+YouTube TV normally refuses to load in a frame. `tiletv.js` adds a `declarativeNetRequest` session rule, limited to the TileTV tab, that removes the `X-Frame-Options` header from tv.youtube.com frames in that tab only. YouTube TV's Content-Security-Policy stays in place. The page and the tiles talk with `postMessage`, and each side checks the other's origin.
 
 ## Notes
 

@@ -3,7 +3,7 @@
   "name": "TileTV",
   "version": "1.0.0",
   "description": "Multiview for YouTube TV: watch up to four streams side by side in one tab, and pick which ones you hear.",
-  "permissions": ["declarativeNetRequestWithHostAccess", "storage"],
+  "permissions": ["declarativeNetRequestWithHostAccess", "storage", "tabs"],
   "host_permissions": ["https://tv.youtube.com/*"],
   "background": { "service_worker": "background.js" },
   "action": { "default_title": "Open TileTV" },

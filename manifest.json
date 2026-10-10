@@ -5,8 +5,9 @@
   "description": "Multiview for YouTube TV: watch up to four streams side by side in one tab, and pick which ones you hear.",
   "permissions": ["declarativeNetRequestWithHostAccess", "storage", "tabs"],
   "host_permissions": ["https://tv.youtube.com/*"],
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
   "background": { "service_worker": "background.js" },
-  "action": { "default_title": "Open TileTV" },
+  "action": { "default_title": "Open TileTV", "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png" } },
   "content_scripts": [
     {
       "matches": ["https://tv.youtube.com/*"],

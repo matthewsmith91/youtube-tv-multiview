@@ -1,6 +1,8 @@
-# TileTV
+# TileTV: YouTube TV Multiview for Chrome
 
-A Chrome extension that adds multiview to YouTube TV in the browser. Watch up to four streams in one tab and choose which ones you hear.
+TileTV is a Chrome extension that brings YouTube TV multiview to your browser. Watch up to four YouTube TV channels at once on one screen, pick any channels you like for each tile, and choose which ones you hear.
+
+YouTube TV's own multiview is built for TV screens. TileTV is for watching multiple games, news channels or live streams side by side on your computer.
 
 ## Install
 

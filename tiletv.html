@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TileTV</title>
+  <link rel="stylesheet" href="tiletv.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">TileTV</div>
+    <div class="group" id="layouts" role="group" aria-label="Layout">
+      <button data-layout="1" title="Single">1</button>
+      <button data-layout="2" title="Side by side">2</button>
+      <button data-layout="1+2" title="One large, two small">1+2</button>
+      <button data-layout="2x2" title="Grid of four">2×2</button>
+      <button data-layout="1+3" title="One large, three small">1+3</button>
+    </div>
+    <div class="group">
+      <button id="muteAll" title="Mute all tiles">Mute all</button>
+      <button id="clean" title="Make the video fill each tile (turn off to use YouTube TV's controls)">Clean view</button>
+      <button id="fullscreen" title="Fullscreen (F)">Fullscreen</button>
+    </div>
+    <div class="hint">Click 🔊 to hear one tile · Shift+click to mix · Alt+1–4 shortcuts</div>
+  </header>
+  <main id="grid"></main>
+  <div id="error" class="error" hidden></div>
+  <script src="tiletv.js"></script>
+</body>
+</html>

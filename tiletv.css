@@ -1,0 +1,111 @@
+:root {
+  --bg: #0b0b0c;
+  --panel: #18181b;
+  --line: #2a2a2f;
+  --text: #e7e7ea;
+  --muted: #9a9aa3;
+  --accent: #ff3b30;
+  --live: #34c759;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.3 system-ui, sans-serif;
+}
+
+body { display: flex; flex-direction: column; overflow: hidden; }
+
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+button:hover { border-color: #444; }
+button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.brand { font-weight: 700; letter-spacing: .02em; }
+.group { display: flex; gap: 4px; }
+.hint { color: var(--muted); margin-left: auto; }
+
+body.fs .topbar { display: none; }
+
+#grid {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  padding: 4px;
+  min-height: 0;
+  position: relative;
+}
+#grid.l-1    { grid-template: 1fr / 1fr; }
+#grid.l-2    { grid-template: 1fr / 1fr 1fr; }
+#grid.l-2x2  { grid-template: 1fr 1fr / 1fr 1fr; }
+#grid.l-1\+2 { grid-template: 1fr 1fr / 2fr 1fr; }
+#grid.l-1\+3 { grid-template: 1fr 1fr 1fr / 3fr 1fr; }
+#grid.l-1\+2 .tile:first-child { grid-row: 1 / 3; }
+#grid.l-1\+3 .tile:first-child { grid-row: 1 / 4; }
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: #000;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.tile.hearing { border-color: var(--live); }
+.tile.max { position: absolute; inset: 4px; z-index: 5; }
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  background: var(--panel);
+}
+.bar button { padding: 2px 8px; }
+.bar .num { width: 18px; text-align: center; color: var(--muted); font-weight: 600; }
+.bar .audio.on { background: var(--live); border-color: var(--live); color: #000; }
+.bar input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+.tile iframe { flex: 1; width: 100%; border: 0; background: #000; }
+
+.error {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  background: #3a1414;
+  border: 1px solid var(--accent);
+  padding: 8px 14px;
+  border-radius: 8px;
+  max-width: 90vw;
+}

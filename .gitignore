@@ -1,0 +1,11 @@
+# Packaged builds and signing keys
+*.crx
+*.pem
+*.zip
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
